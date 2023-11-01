@@ -3,7 +3,7 @@
 	const HORIZONTAL = "horizontal"
 	const VERTICAL = "vertical"
   
-	const CLASS_GUTTER = "gutter"
+	const CLASS_GUTTER = "sv_gutter"
 	const CLASS_SPLIT_VIEW = "split-view"
 	const CLASS_HORIZONTAL = "horizontal"
 	const CLASS_VERTICAL = "vertical"
@@ -152,7 +152,7 @@
 		if (typeof userDefinedCallback === 'function') {
 			const newSizeA = viewA.getBoundingClientRect()[dimension];
 			const newSizeB = viewB.getBoundingClientRect()[dimension];
-			userDefinedCallback(newSizeA, newSizeB, percent);
+			//userDefinedCallback(newSizeA, newSizeB, percent);
 		}
 	}
   

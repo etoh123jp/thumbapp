@@ -30,7 +30,7 @@ pub enum AppMsgType {
 	Quit,
 	OpenDir,
 	OpenFile,
-
+	DriveList,
 }
 pub trait AppMsgResult {
     fn to_string(&self) -> String ;

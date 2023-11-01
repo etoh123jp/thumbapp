@@ -44,6 +44,11 @@ impl AppProc {
 				info!("models::AppMsgType::Init: {:?}", msg);
 				return Ok("Ok".to_string());
 			},
+			models::AppMsgType::DriveList => {
+				let drives = self.get_system_drives().unwrap();
+				self.main_window.get().unwrap().lock().await.emit("drive_list", drives).unwrap();
+				return Ok("Ok".to_string());
+			}
 			models::AppMsgType::Quit => {
 				let window = self.main_window.get().unwrap().lock().await;
 				window.close().unwrap();
@@ -63,7 +68,24 @@ impl AppProc {
 		}
 		Ok("Ok".to_string())
 	} 
-
+	pub fn get_system_drives(&self) -> Result<Vec<models::Drives>, tauri::InvokeError> {
+		let list = disk_list::get_disk_list();
+		let mut drives = Vec::new();
+		for item in list {
+			log::info!("{:?}", item);
+			let drive = models::Drives {
+				label: item[0].clone(),
+				system: item[1].clone(),
+				drive: item[2].clone(),
+				size: item[3].clone(),
+				free: item[4].clone(),
+			};
+			drives.push(drive);
+		}
+		
+	
+		Ok(drives)
+	}
 	/**
 	 * ディレクトリ選択
 	 */

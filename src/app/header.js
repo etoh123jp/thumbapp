@@ -6,44 +6,42 @@ export class Header {
 	}
 	getDrives()
 	{
-	// Umbrella JSを使うためにu()関数を使用
-const $ = u;
-
-// ドライブのデータ（仮）
-const drives = [
-	{ drive: 'Drive1' },
-	{ drive: 'Drive2' },
-	{ drive: 'Drive3' }
-];
-
-// 選択されたドライブ（仮）
-let selectedDrive = 'Drive1';
-
-// select要素を取得
-const driveSelect = $('#driveSelect');
-
-// SVGアイコンのパス
-const svgIconPath = 'src/assets/icon/hard_drive.svg';
-
-// オプションを動的に追加
-drives.forEach((drive) => {
-	const option = document.createElement('option');
-	option.value = drive.drive;
-	option.innerHTML = `<img src="${svgIconPath}" alt="Drive Icon" width="16" height="16"> ${drive.drive}`;
-	driveSelect.append(option);
-});
-
-// 初期選択値を設定
-driveSelect.first().value = selectedDrive;
-
-// select要素の変更イベント
-driveSelect.on('change', (event) => {
-	const newDrive = event.target.value;
-	// onDriveChange関数のような処理をここに書く
-	// 例: onDriveChange(newDrive);
-	selectedDrive = newDrive;
-});
-
+		// Umbrella JSを使うためにu()関数を使用
+		const driveSelectBtn = document.getElementById("driveSelectBtn");
+		const driveDropdown = document.getElementById("driveDropdown");
+		const driveList = document.getElementById("driveList");
+		window.__TAURI__.event.listen('drive_list', event => {
+			console.log('drive_list',event);
+			event.payload.forEach(drive => {
+				console.log(drive);
+				const li = document.createElement("li");
+				li.textContent = drive.drive;
+				li.addEventListener("click", function() {
+					// ここで選択されたドライブに対する処理を行う
+					console.log("Selected drive:", drive);
+				});
+				li.className = "menu-item";
+				driveList.appendChild(li);
+			});
+	
+			// ドロップダウンの表示/非表示を切り替え
+			driveSelectBtn.addEventListener("click", function() {
+				driveDropdown.classList.toggle("hidden");
+			});
+		});
+		
+		window.__TAURI__.invoke('app_wnd_proc', {
+			msg: {
+				msg: 'msg:DriveList',
+				msg_type: 'DriveList',
+				value: 'value:DriveList'
+			},
+		}).then((res) => {
+			console.log("app_wnd_proc::",res);
+			
+		}).catch((err) => {
+			console.log(err);
+		});
 	}
 }
 

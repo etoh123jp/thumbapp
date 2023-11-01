@@ -1,14 +1,53 @@
-.select-menu-button {
+#appBar {
+	display: block;
+	
+	height: 2rem;
+}
+div.btn {
 	display: flex;
 	align-items: center;
+	padding: 0;
+	margin: 0;
+	position: relative;
+}
+#driveSelectBtn {
+	padding: 0.3rem;
+}
+#driveSelectBtn img {
+	height: 1.2rem;
+	width: 1.2rem;
+	display: flex;
+	padding: 0;
 }
 
-.icon {
-	width: 16px;
-	height: 16px;
-	margin-right: 8px;
+#driveDropdown {
+	z-index: 11;
+	top: 100%;
+	position: absolute;
+	min-width: 240px;
+	border: 0;
+	background-color: #24292e00;
+	color: white;
+	border-radius: var(--borderRadius-medium, 6px);
+}
+
+#driveList li {
+	padding: 8px;
+	cursor: pointer;
+	list-style: none;
+}
+
+#driveList li:hover {
+	background-color: #0366d6;
 }
 
 .hidden {
 	display: none;
+}
+nav {
+	padding: 0;
+	margin: 0 !important;
+	background-color: #24292e00;
+	border-radius: var(--borderRadius-medium, 6px);
+	border: 0px;
 }

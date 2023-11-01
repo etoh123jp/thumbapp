@@ -1,5 +1,8 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+
+use std::process::Command;
+
 use log::log;
 use log::{info, trace, warn};
 use env_logger;
@@ -65,6 +68,10 @@ fn init_logger() {
 
 #[tokio::main]
 async fn main() {
+	Command::new("cmd")
+            .args(&["/C", "cls"])
+            .spawn()
+            .expect("cls command failed to start");
 	init_logger();
 	//log 
 	info!("Hello, world!");
