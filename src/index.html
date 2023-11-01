@@ -8,39 +8,61 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <meta name="format-detection" content="telephone=no,email=no,address=no">
 <link rel="canonical" href="">
-<link rel="stylesheet" href="styles.css"">
+<link rel="stylesheet" href="./styles.css"">
+<link rel="stylesheet" href="./app/css/header.css"">
+<link rel="stylesheet" href="./app/css/thumbnail.css"">
+<link rel="stylesheet" href="./app/css/dir_list.css"">
+<link rel="stylesheet" href="./app/css/footer.css"">
 
 <!-- Import Google Fonts -->
 
 <!-- Import CSS -->
 
 <!-- Import JS/jQuery Library -->
-<script  src="./assets/app/libs/SplitView.js"></script>
-<script  src="./assets/app/index.js"></script>
-<script>	
-	app_init();
+<script type="module" src="./app/thumb_app.js"></script>
+<script type="module" src="./app/header.js"></script>
+<script src="./app/libs/SplitView.js"></script>
+<script src="./app/libs/umbrella.min.js"></script>
+
+<script src="./app/index.js">
 </script>
+
 </head>
-<body>
+<body onload = app_init()>
+	<div id="app_content">
+		<!-- START Header Area -->
+		<div id="appBar">
+			<!-- Drive Select -->
+			<select id="driveSelect"></select>
+		
+			<!-- Favorite Button -->
+			<button id="favoriteBtn">Favorite</button>
+		
+			<!-- Current Folder -->
+			<span id="currentFolder">C:\\</span>
+		
+			<!-- Thumbnail Settings -->
+			<button id="thumbSettingsBtn">Thumbnail Settings</button>
+		
+			<!-- Open Folder -->
+			<button id="openFolderBtn">Open Folder</button>
+		
+			<!-- More Options -->
+			<button id="moreOptionsBtn">More</button>
+		</div>
+		<!-- END Header Area -->
 
-<!-- START Header Area -->
-<header>header</header>
-<!-- END Header Area -->
+		<!-- START Main Area -->
+		<main class="split-view horizontal">
+			<div className="dir-list-container">View A</div>
+			<div class="gutter"></div>
+			<div className="thumb-container">View B</div>
+		</main>
+		<!-- END Main Area -->
 
-<!-- START Main Area -->
-<main class="split-view horizontal">
-	<div className="dir-list-container">View A</div>
-	<div class="gutter"></div>
-	<div className="thumb-container">View B</div>
-</main>
-<!-- END Main Area -->
-
-<!-- START Footer Area -->
-<footer>footer</footer>
-<!-- END Footer Area -->
-
-
-<!-- Import JS -->
-
+		<!-- START Footer Area -->
+		<footer id="footer">footer</footer>
+		<!-- END Footer Area -->
+	</div>
 </body>
 </html>

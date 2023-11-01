@@ -1,8 +1,8 @@
 
 
+
 function app_init() {
-	window.addEventListener("load", (event) => {
-		window.__TAURI__.invoke('app_wnd_proc', {
+	window.__TAURI__.invoke('app_wnd_proc', {
 		msg: {
 			msg: 'Hello',
 			msg_type: 'Init',
@@ -12,9 +12,9 @@ function app_init() {
 		console.log(res);
 		const splitViewElement = document.querySelector('.split-view');
 		SplitView.activate(splitViewElement,30);
+		window.thumb_app.header.getDrives();
 	}).catch((err) => {
 		console.log(err);
 	});
-});
 
 }

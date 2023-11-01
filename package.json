@@ -1,0 +1,15 @@
+{
+	"main": "index.js",
+	"scripts": {
+	  },
+  "dependencies": {
+
+    "@primer/css": "^21.0.9"
+
+
+  },
+  "devDependencies": {
+  }
+
+}
+

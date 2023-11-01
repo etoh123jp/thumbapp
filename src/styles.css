@@ -1,5 +1,5 @@
-
-body, html {
+@import "@primer/css/index.scss";
+body, html, #app_content {
 	margin: 0;
 	padding: 0;
 	width: 100%;
