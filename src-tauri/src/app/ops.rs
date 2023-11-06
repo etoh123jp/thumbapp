@@ -1,5 +1,6 @@
 use log;
 
+use std::process::Command as StdCommand;
 
 use std::path::{Path, PathBuf};
 use tauri::api::dialog::blocking::FileDialogBuilder;
@@ -15,6 +16,83 @@ use disk_list;
 
 use crate::app::models;
 
+#[tauri::command]
+pub fn get_exe_directory() -> tauri::Result<String> {
+	let exe_path = std::env::current_exe()?;
+	let exe_dir = exe_path.parent().unwrap_or_else(|| {
+	  panic!("Could not determine the directory of the executable.");
+	});
+	Ok(exe_dir.to_str().unwrap().to_string())
+}
+#[tauri::command]
+pub async fn get_user_home_dir() -> Result<models::DirData, tauri::InvokeError> {
+    match dirs::home_dir() {
+        Some(path) => process_selected_directory(path).await,
+        None => Ok(models::DirData::default()),
+    }
+} 
+#[tauri::command]
+pub fn open_explorer_and_select(path: String, flag: bool) {
+    if cfg!(target_os = "windows") {
+		println!("path: {:?}", path);
+		if flag  {
+			StdCommand::new("explorer").arg("/select,").arg(path).spawn().expect("Failed to open explorer");
+		} else {
+			StdCommand::new("explorer").arg(path).spawn().expect("Failed to open explorer");
+		}
+    } else if cfg!(target_os = "macos") {
+        StdCommand::new("open").arg(path).spawn().unwrap();
+    } else if cfg!(target_os = "linux") {
+        StdCommand::new("xdg-open").arg(path).spawn().unwrap();
+    } else {
+        // その他のOSの場合の処理
+        println!("Unsupported OS");
+    }
+}
+#[tauri::command]
+pub async fn process_selected_directory(selected_dir: PathBuf) -> Result<models::DirData, tauri::InvokeError> {
+
+    log::info!("選択されたフォルダパス: {:?}", selected_dir.to_string_lossy());
+	if "undefined" == selected_dir.to_string_lossy() {
+		return Err(tauri::InvokeError::from("selected_dir is undefined"));
+	}
+
+    let mut image_files = Vec::new();
+    let mut compressed_files = Vec::new();
+	let mut video_files = Vec::new(); 
+    let mut directories = Vec::new();
+
+    if let Ok(entries) = fs::read_dir(selected_dir.clone()) {
+        for entry in entries {
+            let entry = entry.unwrap();
+
+            let path = entry.path();
+			if path.starts_with(".") { 
+				continue; 
+			}
+
+            if path.is_dir() {
+                directories.push(Path::new(&path).file_name().unwrap().to_string_lossy().to_string());
+			} else if is_video_file(&path) {  // 追加
+                video_files.push(path.to_string_lossy().to_string());
+            } else if is_image_file(&path) {
+                image_files.push(path.to_string_lossy().to_string());
+            } else if is_compressed_file(&path) {
+                compressed_files.push(Path::new(&path).file_name().unwrap().to_string_lossy().to_string());
+            }
+        }
+    }
+
+    let dir_data = models::DirData {
+        path: selected_dir.to_string_lossy().to_string(),
+        files: image_files,
+		movies: video_files, 
+        dirs: directories,
+        comps: compressed_files,
+    };
+
+    Ok(dir_data)
+}
 
 #[tauri::command]
 pub fn get_system_drives() -> Result<Vec<models::Drives>, tauri::InvokeError> {

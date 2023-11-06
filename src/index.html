@@ -1,66 +1,61 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
-<meta charset="utf-8">
-<title>thumbnail</title>
-<meta name="description" content="">
-<meta name="keywords" content="">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<meta name="format-detection" content="telephone=no,email=no,address=no">
-<link rel="canonical" href="">
-<link rel="stylesheet" href="./styles.css"">
-<link rel="stylesheet" href="./app/css/header.css"">
-<link rel="stylesheet" href="./app/css/thumbnail.css"">
-<link rel="stylesheet" href="./app/css/dir_list.css"">
-<link rel="stylesheet" href="./app/css/footer.css"">
-<link rel="stylesheet" href="./app/css/primer.css">
+    <meta charset="utf-8">
+    <title>thumbnail</title>
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta name="format-detection" content="telephone=no,email=no,address=no">
+    <link rel="canonical" href="">
+    <link rel="stylesheet" href="./styles.css">
+	<link rel="stylesheet " href="./app/css/header.css">
+    <link rel="stylesheet" href="./app/css/thumbnail.css">
+	<link rel="stylesheet " href="./app/css/dir_list.css ">
+    <link rel="stylesheet" href="./app/css/footer.css">
+	<link rel="stylesheet " href="./app/css/primer.css">
+	<link rel="stylesheet " href="./app/css/clusterize.css">
 
 <!-- Import Google Fonts -->
 
-<!-- Import CSS -->
+	<!-- Import JS/jQuery Library -->
+	<script type="module" src="./app//libs/AppConfig.js"></script>
+	<script type="module" src="./app/ui/header.js"></script>
+	<script type="module" src="./app/ui/dir_list.js"></script>
+	<script type="module" src="./app/ui/thumbnail.js"></script>
+	<script type="module" src="./app/ui/footer.js"></script>
+	<script src="./app/libs/SplitView.js"></script>
+	<script src="./app/libs/vlist.js"></script>
 
-<!-- Import JS/jQuery Library -->
-<script type="module" src="./app/thumb_app.js"></script>
-<script type="module" src="./app/header.js"></script>
-<script src="./app/libs/SplitView.js"></script>
-<script src="./app/libs/umbrella.min.js"></script>
-
-<script src="./app/index.js">
-	let resizeTimer;
-window.addEventListener("resize", () => {
-  document.body.classList.add("resize-animation-stopper");
-  clearTimeout(resizeTimer);
-  resizeTimer = setTimeout(() => {
-    document.body.classList.remove("resize-animation-stopper");
-  }, 400);
-});
-</script>
-</head>
-<body onload = app_init() className="color-bg-inset">
-	<div id="app_content" class="color-bg-inset">
+	<script type="module" src="./app/index.js ">
+	
+	</script>
+ <style>
+.virtual-list-item {
+  /* アイテムのスタイルをここに追加 */
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  background: #f9f9f9;
+  overflow: hidden;
+}
+</style>
+</head> 
+<body   className="color-bg-default">
+	<div id="app_content" >
 		<!-- START Header Area -->
-		<div id="appBar" class="color-bg-inset border">
-			<!-- Drive Select -->
-			<!-- Drive Select Button and Dropdown -->
-			<div  class="btn ">
-				<div id="driveSelectBtn">
-					<img src="./assets/icon/hard_drive.svg" alt="Drive Icon">
-				</div>
-				<label className=".Label">Drive</label>
-				<div  id="driveDropdown" class="hidden">
-					<nav  id="driveList" class="menu">
-						<!-- JavaScriptで動的に追加されるリスト要素 -->
-					</nav>
-				</div>
-			</div>
-		</div>
+		<header id="appBar" class="flex-justify-between border ">
+		
+		</header>
 		<!-- END Header Area -->
 
 		<!-- START Main Area -->
-		<main class="split-view horizontal">
-			<div className="dir-list-container">View A</div>
-			<div class="sv_gutter"></div>
-			<div className="thumb-container .container-xl">
+		<main class="split-view horizontal ">
+			<div id="dir-list-container" class="dir-list-container ">
+				
+			</div>
+			<div class="sv_gutter "></div>
+			<div id="thumb-container" class="thumb-container ">
 				<p>View B</p>
 			</div>
 		</main>

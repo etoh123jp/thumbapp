@@ -1,42 +1,76 @@
 "use client"
-import { invoke } from '@tauri-apps/api/tauri';
-import {fs, path} from '@tauri-apps/api';
-import { writeTextFile, BaseDirectory, readTextFile } from '@tauri-apps/api/fs';
+window.invoke = window.__TAURI__.invoke;
+window.fs = window.__TAURI__.fs;
+window.path = window.__TAURI__.path;
+window.readTextFile = window.__TAURI__.fs.readTextFile;
+window.writeTextFile = window.__TAURI__.fs.writeTextFile;
+window.BaseDirectory = window.__TAURI__.fs.BaseDirectory;
+window.tauri = window.__TAURI__;
 class AppConfig {
 	/**
 	 * config data
 	 * @type {@type{
-	 * 		thumb_setting: {aspectRatioEnabled: boolean, aspectRatio: number, rect: {width: number, height: number}, min: number}}
+	 * 		aspectRatioEnabled: boolean, aspectRatio: number, rect: {width: number, height: number}, min: number}
 	 * }
 	 */
-	configData = {};
+	thumbnail = {};
+	/**
+	* config data
+	* @type {@type{}
+	* }
+	*/
+	favorite ={}
+	
+	
 	constructor()  {
 		this.configData = null;
-		
-		
 	}
 	async init() {
 		this.path = {};
-		const BaseDirectory = await invoke('get_exe_directory');
-		const configFilePath = await path.join(BaseDirectory,'config.json5');
-		const thumb_settingPath = await path.join(BaseDirectory,'thumbnail.json5');
-		const themeFilepath = await path.join(BaseDirectory,'theme.json5');
-		const favoritePath = await path.join(BaseDirectory,'favorite.json5');
-		this.path.base_dir = BaseDirectory;
-		this.path.configData = configFilePath;
+		this.path.base_dir = await invoke('get_exe_directory');
+		console.log(this.path.base_dir);
+		// const configFilePath = await path.join(this.path.base_dir,'config.json5');
+		const thumb_settingPath = await path.join(this.path.base_dir,'thumbnail.json5');
+		const themeFilepath = await path.join(this.path.base_dir,'theme.json5');
+		const favoritePath = await path.join(this.path.base_dir,'favorite.json5');
+		// this.path.configData = configFilePath;
 		this.path.favorite =  favoritePath;
+		this.path.theme =  themeFilepath;
 		this.path.thumbnail = thumb_settingPath;
 		this.configData = {};
 		await this.load();
 	}
+	/**
+	 * Returns the select path.
+	 *
+	 * @return {String} The select path.
+	 */
+	async getLastSelectPath() {
+		const now_select_dir_data = localStorage.getItem("last_path");
+		if (now_select_dir_data != null) {
+			return now_select_dir_data;
+		}
+		else {
+			let now_select_dir_data = await invoke("get_user_home_dir");
+			localStorage.setItem("last_path", now_select_dir_data.path);
+			return now_select_dir_data.path;
+		}
+	}
+	
 	async load() {
-		await this.loadThemeSeeting();
-		await this.loadThumbnailSetting();
+		try {
+			await this.loadThemeSeeting();
+			await this.loadThumbnailSetting();
+			await this.loadConfigFile("favorite");
+		}catch (error) {
+			console.log(error);
+		}
+		
 	}
 	async loadThemeSeeting() 
 	{ 
 		this.configData.theme = {};
-		await this.loadConfigFile("theme", 
+		await this.loadConfigFile( "theme", 
 		{
 				typography: {
 					fontSize: 12,
@@ -58,7 +92,7 @@ class AppConfig {
 	}
 	async loadThumbnailSetting() {
 		this.configData.thumbnail = {};
-		await this.loadConfigFile('thumbnail',
+		await this.loadConfigFile("thumbnail",
 		{
 				aspectRatioEnabled: true,
 				aspectRatio: 1,
@@ -71,35 +105,32 @@ class AppConfig {
 	}
 	// 設定ファイルを読み込む
 	async loadConfigFile(fileName, defaultConfig={}) {
-		const BaseDirectory = await invoke('get_exe_directory');
-		const configFilePath = await path.join(BaseDirectory, fileName + '.json5');
-
+		const configFilePath = this.path[fileName];
 		if (await fs.exists(configFilePath)) {
 			console.log("exists ",fileName, ".json5");
 			const configDataJson = await readTextFile( configFilePath);
 			const configData = JSON.parse(configDataJson);
 			this.configData[fileName] = {...configData};
-			console.log('Config loaded:', this.configData[fileName]);
+			console.log('Config loaded->',fileName, ":::", this.configData[fileName]);
 		} else {
 			console.log("does not exists ",fileName,".json5");
-	
-			const configData = JSON.stringify(defaultConfig);
-			writeTextFile({ path: configFilePath, contents: configData }).then(() => {
-				this.configData[fileName] = {...configData};
-				console.log('Config file created.');
-			}).catch(error => {
-				console.log(error);
-			});
+			this.saveConfigFile(fileName, defaultConfig);
 		}
 		return this.configData[fileName];
 	}
 	
 	// 設定ファイルを保存する
-	saveConfigFile() {
+	saveConfigFile(fileName, configData) {
 		// データをJSON形式に変換して書き込む
+		const configFilePath = this.path[fileName];
 		try {
-			const fileData = JSON.stringify(this.configData);
-			fs.writeFileSync(configPath, fileData, null, 2);
+			const configDataJson = JSON.stringify(configData);
+			writeTextFile({ path: configFilePath, contents: configDataJson }).then(() => {
+				this.configData[fileName] = {...configData};
+				console.log('Config file save.::', fileName , ":::",this.configData[fileName]);
+			}).catch(error => {
+				console.log(error);
+			});
 		}
 		catch (error) {
 			console.log(error);

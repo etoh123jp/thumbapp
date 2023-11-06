@@ -1,53 +1,49 @@
 #appBar {
-	display: block;
-	
 	height: 2rem;
 }
 div.btn {
-	display: flex;
+	
 	align-items: center;
 	padding: 0;
 	margin: 0;
 	position: relative;
 }
-#driveSelectBtn {
-	padding: 0.3rem;
-}
-#driveSelectBtn img {
+
+
+header#appBar > details > div > img {
 	height: 1.2rem;
 	width: 1.2rem;
 	display: flex;
 	padding: 0;
 }
 
-#driveDropdown {
-	z-index: 11;
-	top: 100%;
-	position: absolute;
-	min-width: 240px;
-	border: 0;
-	background-color: #24292e00;
-	color: white;
-	border-radius: var(--borderRadius-medium, 6px);
+/* 開いた時のSummary要素スタイル */
+details[open] summary {
+	outline: none; /* 開いたときのアウトラインを非表示にする */
 }
-
-#driveList li {
-	padding: 8px;
-	cursor: pointer;
-	list-style: none;
+/* デフォルトのSummary要素スタイル */
+summary {
+	outline: none; /* アウトラインを非表示にする（クリック時のボーダーを削除） */
+	width: 100%; /* Summary要素の幅を100%に設定 */
+  }
+nav.menu > li.menu-item {
+	text-align: left;
+	margin:0;
+	padding: 4px 8px;
 }
-
-#driveList li:hover {
-	background-color: #0366d6;
+.cp-2 {
+	padding-bottom: 2px;
+    padding-top: 2px;
+}
+.flex-row-reverse {
+	display: flex;
+	flex-wrap: nowrap;
+	flex-direction: row-reverse;
+	align-content: center;
+	align-items: center;
+	justify-content: center;
 }
 
 .hidden {
-	display: none;
-}
-nav {
-	padding: 0;
-	margin: 0 !important;
-	background-color: #24292e00;
-	border-radius: var(--borderRadius-medium, 6px);
-	border: 0px;
+	display: none !important;
 }

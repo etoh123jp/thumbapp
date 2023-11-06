@@ -9,6 +9,7 @@ use env_logger;
 use chrono::Local;
 
 mod app;
+use app::ops;
 use app::app_proc;
 use tauri::Manager;
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
@@ -76,7 +77,7 @@ async fn main() {
 	//log 
 	info!("Hello, world!");
 	let args: Vec<String> = std::env::args().collect();
-	for arg in &args[1..] {
+	for arg in &args {
         println!("Got argument: {}", arg);
     }
     tauri::Builder::default()
@@ -86,7 +87,15 @@ async fn main() {
 		app::app_proc::AppProc::create_instance(main_window).unwrap();
         Ok(())
     })
-    .invoke_handler(tauri::generate_handler![app::app_proc::app_wnd_proc])
+    .invoke_handler(tauri::generate_handler![
+		app::app_proc::app_wnd_proc,
+		ops::get_exe_directory,
+		ops::get_user_home_dir,
+		ops::open_explorer_and_select,
+		ops::process_selected_directory,
+		])
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
 }
+
+

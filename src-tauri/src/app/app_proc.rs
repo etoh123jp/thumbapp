@@ -2,7 +2,7 @@ use log;
 use log::info;
 
 
-use std::{path::{Path, PathBuf}, sync::Arc};
+use std::{path::{Path, PathBuf}, sync::Arc, env};
 use std::fs;
 
 #[allow(unused_imports)]
@@ -16,6 +16,7 @@ use tauri::async_runtime::Mutex;
 use once_cell::sync::Lazy;
 use crate::app::models;
 use crate::app::ops;
+
 
 static APP_PROC: Lazy<OnceCell<Option<AppProc>>> = Lazy::new(|| OnceCell::new());
 
